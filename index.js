@@ -23,11 +23,18 @@ async function run(){
         await client.connect();
         const database = client.db('watchStoreInformation');
         const productsCollection =  database.collection('products');
+        const orderCollection =  database.collection('orders')
         //get products
         app.get('/products', async(req,res)=>{
             const cursor = productsCollection.find({});
             const products =  await cursor.toArray();
             res.send(products)
+        });
+          // Add Orders API
+         app.post('/orders', async (req, res) => {
+           const order = req.body;
+           const result = await orderCollection.insertOne(order);
+           res.json(result);
         });
     }
     finally{
